@@ -1,3 +1,10 @@
 fastapi
 gunicorn
 uvicorn
+sqlalchemy[asyncio]
+asyncpg
+pytest
+pytest-asyncio
+psutil
+objgraph
+pydantic
