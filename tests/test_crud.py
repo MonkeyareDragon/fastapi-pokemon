@@ -1,6 +1,6 @@
 import pytest
 from app.db.database import SessionLocal
-from app.crud import create_pokemon
+from app.utilis import create_pokemon
 
 @pytest.mark.asyncio
 async def test_create_pokemon():

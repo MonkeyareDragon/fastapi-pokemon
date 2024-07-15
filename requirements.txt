@@ -8,3 +8,4 @@ pytest-asyncio
 psutil
 objgraph
 pydantic
+fastapi-pagination
