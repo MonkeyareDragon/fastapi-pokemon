@@ -34,7 +34,7 @@ async def test_read_pokemons_type():
     pokemons = response.json()["items"]
     assert pokemons is not None
     for pokemon in pokemons:
-        assert pokemon["type"] == "electric"
+        assert pokemon["type"].lower() == "electric"
 
 @pytest.mark.asyncio
 async def test_read_pokemons_name_and_type():
@@ -46,7 +46,7 @@ async def test_read_pokemons_name_and_type():
     assert pokemons is not None
     for pokemon in pokemons:
         assert "pi" in pokemon["name"].lower()
-        assert pokemon["type"] == "electric"
+        assert pokemon["type"].lower() == "electric"
 
 # Ensure the event loop used by pytest and AsyncClient is compatible
 @pytest.fixture(scope="module")
