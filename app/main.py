@@ -1,11 +1,10 @@
 import httpx
-from fastapi import FastAPI, Depends, status
+from fastapi import FastAPI, Depends, Query
 from fastapi_pagination import add_pagination, Page, paginate
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import sessionmaker
 from contextlib import asynccontextmanager
-from app.db.database import SessionLocal, engine, get_db, Base
+from app.db.database import SessionLocal, engine, get_db
 from app.db.init_db import init_db
 from app.utilis import create_pokemon
 import app.schemas as schemas
@@ -39,8 +38,19 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 @app.get("/api/v1/pokemons", response_model=Page[schemas.Pokemon])
-async def read_pokemons(db: AsyncSession = Depends(get_db)):
+async def read_pokemons(
+    db: AsyncSession = Depends(get_db), 
+    name: str = Query(None, title="Filter by name", description="Filter Pokemon by name"),
+    type: str = Query(None, title="Filter by type", description="Filter Pokemon by type")
+):
     stmt = select(models.Pokemon)
+    
+    if name:
+        stmt = stmt.where(models.Pokemon.name.ilike(f"{name}%"))
+    
+    if type:
+        stmt = stmt.where(models.Pokemon.type.ilike(f"{type}%"))
+        
     result = await db.execute(stmt)
     pokemons = result.scalars().all()
     return paginate(pokemons)
